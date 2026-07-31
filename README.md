@@ -2,10 +2,11 @@
 
 ## Overview
 
-This pipeline processes hyperspectral Raman maps and turns raw pixel spectra
-into quantitative mineralogy and diversity metrics. It uses a ready-to-run
-small example (sample `MN`). Running it on new data means editing a single
-file, `config.R`.
+CHEAP (Compositional HEterogeneity At Pixel level) is a pipeline processing hyperspectral Raman maps 
+and turning raw pixel spectra into quantitative mineralogy and diversity metrics. 
+
+It uses a ready-to-run Raman maps as .txt (see example provided with the sample `MN`). 
+Running it on new data means editing a single file, `config.R`.
 
 Pipeline steps (matching the numbered scripts):
 
