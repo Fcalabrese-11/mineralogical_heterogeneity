@@ -3,7 +3,7 @@
 ## Overview
 
 This pipeline processes hyperspectral Raman maps and turns raw pixel spectra
-into quantitative mineralogy and diversity metrics. It ships ready to run on a
+into quantitative mineralogy and diversity metrics. It uses a ready-to-run
 small example (sample `MN`). Running it on new data means editing a single
 file, `config.R`.
 
@@ -14,10 +14,10 @@ Pipeline steps (matching the numbered scripts):
    These feed the custom references in step 1, so step 2 runs **before** step 1
    whenever custom references are used; `main.R` sources them in that order.
 3. Correct raw sample spectra (Savitzky-Golay + ALS baseline).
-4. Decompose each sample map with Non-negative Matrix Factorisation (NMF).
-5. Match NMF components to reference minerals via cosine similarity, then
+4. Decompose each sample map with Non-negative Matrix Factorization (NMF).
+5. Match NMF components to reference spectral library via cosine similarity, then
    assign a mineral identity to each pixel.
-6. Quantify spatial heterogeneity (H-score).
+6. Quantify spatial heterogeneity with Spectral heterogeneity score (SHS).
 7. Compute diversity indices (Gini index, Shannon entropy).
 8. Compare diversity metrics across samples.
 9. Compute Rao's Q quadratic entropy in a sliding spatial window.
@@ -26,18 +26,18 @@ Pipeline steps (matching the numbered scripts):
 12. Merge the per-sample outputs and draw the summary figures.
 
 The diversity metrics carried through the analysis are the **Gini index**,
-**Shannon entropy**, the **spectral heterogeneity score (H-score)**, and
-**Rao's Q**.
+**Shannon entropy**, the **spectral heterogeneity score (SHS)**, and
+**Rao's Quadratic entropy**.
 
 ## Repository layout
 
 ```
 .
-├── main.R          # entry point — sources the steps in order
+├── main.R          # sources the steps in order
 ├── config.R        # the only file to edit (paths, samples, palette, params)
 ├── functions/      # shared helper functions
 ├── scripts/        # numbered pipeline steps 01–12
-├── data/           # inputs (the example ships here)
+├── data/           # inputs 
 │   ├── raw_data/ corrected_data/ reference_rruff/ reference_biomass/
 │   ├── corrected_biomass/ reference_library/ mineral.id.cluster.xlsx
 └── results/        # outputs (nmf_output/ heterogeneity_scores/ plots/ …)
@@ -69,8 +69,7 @@ list. Because the pipeline loops over `names(samples)` and builds all
 cross-sample comparisons from that list, adding or removing a sample is a
 `config.R` edit only — no script changes.
 
-Adding a sample: copy the `MN` block in `samples` (or a `CR`/`VR` template at
-the bottom of `config.R`), rename it, and set its paths. The component fields
+Adding a sample: copy the  `samples`, rename it, and set its paths. The component fields
 (`biomass_comp`, `resin_comp`, `comp_names`, …) stay at their defaults / `NULL`
 until step `05a` has been run and its diagnostic PDF reviewed; they are then
 filled from that output before running `05b`.
@@ -78,7 +77,7 @@ filled from that output before running `05b`.
 ## The example
 
 Sample `MN` ships with the repository: its raw and corrected FoV, NMF result,
-reference library, and h-score are included, and `config.R` is pre-filled for
+reference library, and SH-score are included, and `config.R` is pre-filled for
 it. The downstream analysis and figures can be reproduced without the slow
 steps by sourcing, from the repository root:
 
